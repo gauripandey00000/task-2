@@ -24,24 +24,30 @@ class App extends Component<{}, IState> {
       data: [],
     };
   }
+  startDataStreaming() {
+    setInterval(() => {
+      this.getDataFromServer();
+    }, 100);
+  }
+
+  getDataFromServer() {
+    DataStreamer.getData((serverResponds: ServerRespond[]) => {
+      this.setState({ data: [...this.state.data, ...serverResponds] });
+    });
+  }
 
   /**
    * Render Graph react component with state.data parse as property data
    */
   renderGraph() {
-    return (<Graph data={this.state.data}/>)
+    return (<Graph data={this.state.data}/>);
   }
 
   /**
    * Get new data from server and update the state with the new data
    */
-  getDataFromServer() {
-    DataStreamer.getData((serverResponds: ServerRespond[]) => {
       // Update the state by creating a new array of data that consists of
       // Previous data in the state and the new data from server
-      this.setState({ data: [...this.state.data, ...serverResponds] });
-    });
-  }
 
   /**
    * Render the App react component
